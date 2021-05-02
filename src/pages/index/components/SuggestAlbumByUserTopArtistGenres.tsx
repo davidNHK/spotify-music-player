@@ -10,6 +10,10 @@ export function withSuggestAlbumByUserTopArtistGenres(
 ) {
   return function WithSuggestAlbumByUserTopArtistGenres() {
     const history = useHistory();
+    const onClickToggleButton = useCallback(album => {
+      // eslint-disable-next-line no-console
+      console.log({ album });
+    }, []);
     const onClickAlbum = useCallback(
       album => {
         history.push(`/album/${album.id}`);
@@ -22,6 +26,7 @@ export function withSuggestAlbumByUserTopArtistGenres(
       <WrappedComponent
         data-testid="suggested-album-by-user-top-artists-genres"
         onClickSuggestion={onClickAlbum}
+        onClickToggleButton={onClickToggleButton}
         suggestions={response?.data.albums}
         title={capitalize(response?.data?.genres[0])}
       />

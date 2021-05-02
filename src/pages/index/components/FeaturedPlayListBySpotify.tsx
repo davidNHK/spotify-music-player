@@ -12,6 +12,10 @@ export function withFeaturedPlayListBySpotify(
 ) {
   return function WithFeaturedPlayListBySpotify() {
     const history = useHistory();
+    const onClickToggleButton = useCallback(playlist => {
+      // eslint-disable-next-line no-console
+      console.log({ playlist });
+    }, []);
     const onClickPlayList = useCallback(
       playlist => {
         history.push(`/playlist/${playlist.id}`);
@@ -24,6 +28,7 @@ export function withFeaturedPlayListBySpotify(
       <WrappedComponent
         data-testid="featured-play-list"
         onClickSuggestion={onClickPlayList}
+        onClickToggleButton={onClickToggleButton}
         suggestions={response?.data.playlists.items}
         title={response?.data.message}
       />

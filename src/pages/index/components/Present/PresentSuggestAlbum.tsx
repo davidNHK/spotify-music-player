@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
 import type { AlbumSimplified } from '../../../../hooks/spotify/typings/Album';
+import { ReactComponent as Play } from './play.svg';
 
 export interface Props {
   'data-testid': string;
   onClickSuggestion: (suggestion: AlbumSimplified) => void;
+  onClickToggleButton: (suggestion: AlbumSimplified) => void;
   suggestions?: AlbumSimplified[];
   title: string;
 }
@@ -31,12 +33,37 @@ const Suggestion = styled.a`
   min-width: 164px;
   padding: ${props => props.theme.spaces.xl} ${props => props.theme.spaces.xl}
     ${props => props.theme.spaces.m};
-  background: ${props => props.theme.colors.contrast2};
+  background: ${props => props.theme.colors.contrast1};
   border-radius: 8px;
   text-decoration: none;
   margin-right: ${props => props.theme.spaces.m};
   :hover {
     cursor: pointer;
+    background: ${props => props.theme.colors.contrast2};
+  }
+`;
+
+const ToggleButton = styled.button`
+  outline: none;
+  border: 0;
+  border-radius: 500px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 10;
+  bottom: 8px;
+  right: 8px;
+  visibility: hidden;
+  background-color: ${props => props.theme.colors.green};
+  color: #fff;
+  ${Suggestion}:hover & {
+    visibility: visible;
+  }
+  :hover {
+    transform: scale(1.06);
   }
 `;
 
@@ -79,6 +106,7 @@ export function PresentSuggestAlbum({
   title,
   suggestions,
   onClickSuggestion,
+  onClickToggleButton,
   'data-testid': dataTestId,
 }: Props) {
   if (!suggestions || suggestions?.length === 0) return null;
@@ -96,7 +124,23 @@ export function PresentSuggestAlbum({
               onClickSuggestion(suggestion);
             }}
           >
-            <SuggestionCover src={suggestion.images[0]?.url} />
+            <div
+              style={{
+                position: 'relative',
+              }}
+            >
+              <SuggestionCover src={suggestion.images[0]?.url} />
+              <ToggleButton
+                aria-label={'play'}
+                onClick={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClickToggleButton(suggestion);
+                }}
+              >
+                <Play />
+              </ToggleButton>
+            </div>
             <SuggestionHeading>
               <SuggestionName>{suggestion.name}</SuggestionName>
               <SuggestionDescription>

@@ -11,6 +11,7 @@ describe('Test render PresentSuggestAlbum component', () => {
         <PresentSuggestAlbum
           data-testid=""
           onClickSuggestion={jest.fn()}
+          onClickToggleButton={jest.fn()}
           suggestions={undefined}
           title="Hello World"
         />
@@ -24,6 +25,7 @@ describe('Test render PresentSuggestAlbum component', () => {
         <PresentSuggestAlbum
           data-testid=""
           onClickSuggestion={jest.fn()}
+          onClickToggleButton={jest.fn()}
           suggestions={[]}
           title="Hello World"
         />
@@ -37,6 +39,7 @@ describe('Test render PresentSuggestAlbum component', () => {
         <PresentSuggestAlbum
           data-testid=""
           onClickSuggestion={jest.fn()}
+          onClickToggleButton={jest.fn()}
           suggestions={[
             {
               artists: [

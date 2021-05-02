@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { ErrorFallback } from '../../components/ErrorFallback';
 import { Suspense } from '../../components/Suspense/withSuspense';
-import { AlbumByTopStreamTracks } from './components/AlbumByTopStreamTracks';
 import { FeaturedPlayListBySpotify } from './components/FeaturedPlayListBySpotify';
 import { SuggestAlbumByUserLastPlayedArtists } from './components/SuggestAlbumByUserLastPlayedArtists';
 import { SuggestAlbumByUserLastPlayedTracks } from './components/SuggestAlbumByUserLastPlayedTracks';
@@ -22,7 +21,6 @@ export function Suggestion() {
         <Suspense>
           <FeaturedPlayListBySpotify />
           <SuggestAlbumByUserTopArtists />
-          <AlbumByTopStreamTracks />
           <SuggestAlbumByUserTopTracks />
           <SuggestAlbumByUserTopArtistGenres />
           <SuggestAlbumByUserLastPlayedTracks />
