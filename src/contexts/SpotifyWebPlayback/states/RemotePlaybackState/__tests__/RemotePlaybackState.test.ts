@@ -89,6 +89,7 @@ describe('RemotePlaybackState', () => {
     const playbackState = await state.getPlaybackState();
     expect(playbackState).toStrictEqual({
       actions: currentPlayingContext.actions,
+      context: currentPlayingContext.context,
       device: currentPlayingContext.device,
       is_active: currentPlayingContext.device.is_active,
       is_paused: !currentPlayingContext.is_playing,

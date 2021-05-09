@@ -5,28 +5,13 @@ import { createMemoryHistory } from 'history';
 import { TestApp } from 'src/App';
 
 import { createPollyContext } from '../../../../../testHelper/polly/createPollyContext';
+import { setupMockServer } from '../../../../../testHelper/polly/setupMockServer';
 import type { Props } from '../Present/PresentSuggestAlbum';
 import { withSuggestAlbumByUserLastPlayedTracks } from '../SuggestAlbumByUserLastPlayedTracks';
 
 const mockPlayHistory = casual.PlayHistoryObject({});
 const mockTrack = casual.SimplifiedTrackObject({});
-createPollyContext({
-  appConfig: {
-    enableMockServer: true,
-    mockRouteHandlers: {
-      spotifyAPI: {
-        get: {
-          '/v1/me/player/recently-played': (_, res) => {
-            res.status(200).json(casual.CursorPagingObject([mockPlayHistory]));
-          },
-          '/v1/recommendations': (_, res) => {
-            res.status(200).json(casual.RecommendationsObject([mockTrack]));
-          },
-        },
-      },
-    },
-  },
-});
+const context = createPollyContext();
 
 const SuggestAlbumByUserLastPlayedTracks = withSuggestAlbumByUserLastPlayedTracks(
   ({ onClickSuggestion, suggestions, title }: Props) => {
@@ -51,6 +36,22 @@ const SuggestAlbumByUserLastPlayedTracks = withSuggestAlbumByUserLastPlayedTrack
 describe('Test SuggestAlbumByUserLastPlayedTracks component', () => {
   it('Click suggestion should jump to /album/:id', async () => {
     const history = createMemoryHistory();
+    setupMockServer(context.polly, {
+      handlers: {
+        spotifyAPI: {
+          get: {
+            '/v1/me/player/recently-played': (_, res) => {
+              res
+                .status(200)
+                .json(casual.CursorPagingObject([mockPlayHistory]));
+            },
+            '/v1/recommendations': (_, res) => {
+              res.status(200).json(casual.RecommendationsObject([mockTrack]));
+            },
+          },
+        },
+      },
+    });
     render(
       <TestApp RouterProps={{ history }}>
         <SuggestAlbumByUserLastPlayedTracks />

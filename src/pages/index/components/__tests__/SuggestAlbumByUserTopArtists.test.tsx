@@ -5,28 +5,13 @@ import { createMemoryHistory } from 'history';
 import { TestApp } from 'src/App';
 
 import { createPollyContext } from '../../../../../testHelper/polly/createPollyContext';
+import { setupMockServer } from '../../../../../testHelper/polly/setupMockServer';
 import type { Props } from '../Present/PresentSuggestAlbum';
 import { withSuggestAlbumByUserTopArtists } from '../SuggestAlbumByUserTopArtists';
 
 const mockArtist = casual.ArtistObject({});
 const mockTrack = casual.SimplifiedTrackObject({});
-createPollyContext({
-  appConfig: {
-    enableMockServer: true,
-    mockRouteHandlers: {
-      spotifyAPI: {
-        get: {
-          '/v1/me/top/artists': (_, res) => {
-            res.status(200).json(casual.PagingObject([mockArtist]));
-          },
-          '/v1/recommendations': (_, res) => {
-            res.status(200).json(casual.RecommendationsObject([mockTrack]));
-          },
-        },
-      },
-    },
-  },
-});
+const context = createPollyContext();
 
 const SuggestPlayListByTopArtist = withSuggestAlbumByUserTopArtists(
   ({ onClickSuggestion, suggestions, title }: Props) => {
@@ -50,6 +35,20 @@ const SuggestPlayListByTopArtist = withSuggestAlbumByUserTopArtists(
 describe('Test SuggestAlbumByUserTopArtists component', () => {
   it('Click suggestion should jump to /album/:id', async () => {
     const history = createMemoryHistory();
+    setupMockServer(context.polly, {
+      handlers: {
+        spotifyAPI: {
+          get: {
+            '/v1/me/top/artists': (_, res) => {
+              res.status(200).json(casual.PagingObject([mockArtist]));
+            },
+            '/v1/recommendations': (_, res) => {
+              res.status(200).json(casual.RecommendationsObject([mockTrack]));
+            },
+          },
+        },
+      },
+    });
     render(
       <TestApp RouterProps={{ history }}>
         <SuggestPlayListByTopArtist />

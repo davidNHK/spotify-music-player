@@ -3,6 +3,7 @@ import { ComponentType, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSuggestedAlbumByUserTopArtistGenres } from 'src/hooks/spotify/query/useSuggestedAlbumByUserTopArtistGenres';
 
+import { useSpotifyWebPlayback } from '../../../contexts/SpotifyWebPlayback';
 import { PresentSuggestAlbum, Props } from './Present/PresentSuggestAlbum';
 
 export function withSuggestAlbumByUserTopArtistGenres(
@@ -10,10 +11,16 @@ export function withSuggestAlbumByUserTopArtistGenres(
 ) {
   return function WithSuggestAlbumByUserTopArtistGenres() {
     const history = useHistory();
-    const onClickToggleButton = useCallback(album => {
-      // eslint-disable-next-line no-console
-      console.log({ album });
-    }, []);
+    const { actions } = useSpotifyWebPlayback();
+    const onClickToggleButton = useCallback(
+      album => {
+        actions.playOnUserPlayback({
+          context_uri: album.uri,
+          offset: { position: 0 },
+        });
+      },
+      [actions],
+    );
     const onClickAlbum = useCallback(
       album => {
         history.push(`/album/${album.id}`);

@@ -57,7 +57,7 @@ export function setupMockServer(
   polly: Polly,
   options: {
     handlers?: APIMock;
-  },
+  } = {},
 ) {
   const { handlers = {} } = options;
   polly?.server.get('https://ipinfo.io/json').intercept(

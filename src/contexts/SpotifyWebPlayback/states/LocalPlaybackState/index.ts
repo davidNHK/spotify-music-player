@@ -114,6 +114,7 @@ export class LocalPlaybackState implements ActivePlaybackState {
     }
     const currentVolume = await this.localPlayback.getVolume();
     const {
+      context,
       disallows,
       position,
       paused,
@@ -123,6 +124,7 @@ export class LocalPlaybackState implements ActivePlaybackState {
     } = state;
     return {
       actions: { disallows },
+      context,
       device: {
         id: this.localPlayback._options.id,
         is_active: true,

@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
+import {
+  Props as TogglePlayerPlayingStateButtonProps,
+  TogglePlayerPlayingStateButton,
+} from '../../../../components/TogglePlayerPlayingStateButton/index';
+import { usePlayingContext } from '../../../../contexts/SpotifyWebPlayback/hooks/usePlayingContext';
 import type { PlaylistSimplified } from '../../../../hooks/spotify/typings/Playlist';
-import { ReactComponent as Play } from './play.svg';
 
 export interface Props {
   'data-testid': string;
@@ -44,7 +48,9 @@ const Suggestion = styled.a`
   }
 `;
 
-const ToggleButton = styled.button`
+const ToggleButton = styled(TogglePlayerPlayingStateButton)<
+  TogglePlayerPlayingStateButtonProps<PlaylistSimplified>
+>`
   outline: none;
   border: 0;
   border-radius: 500px;
@@ -66,6 +72,13 @@ const ToggleButton = styled.button`
   :hover {
     transform: scale(1.06);
   }
+  ${props => {
+    if (props.isBelongCurrentTrack)
+      return `
+    visibility: visible;
+`;
+    return '';
+  }}
 `;
 
 const SuggestionCover = styled.img`
@@ -110,6 +123,8 @@ export function PresentSuggestPlayList({
   onClickToggleButton,
   'data-testid': dataTestId,
 }: Props) {
+  const currentContext = usePlayingContext();
+
   if (!suggestions || suggestions?.length === 0) return null;
   return (
     <Container data-testid={dataTestId}>
@@ -133,15 +148,10 @@ export function PresentSuggestPlayList({
             >
               <SuggestionCover src={suggestion.images[0]?.url} />
               <ToggleButton
-                aria-label={'play'}
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onClickToggleButton(suggestion);
-                }}
-              >
-                <Play />
-              </ToggleButton>
+                isBelongCurrentTrack={currentContext?.uri === suggestion.uri}
+                item={suggestion}
+                onClickToggleButton={onClickToggleButton}
+              />
             </div>
             <SuggestionHeading>
               <SuggestionName>{suggestion.name}</SuggestionName>

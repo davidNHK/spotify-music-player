@@ -21,6 +21,7 @@ export interface PlaylistSimplified {
   snapshot_id: string;
   tracks: Paging<PlayListTrack>;
   type: 'playlist';
+  uri: string;
 }
 
 export interface PlaylistFull extends PlaylistSimplified {

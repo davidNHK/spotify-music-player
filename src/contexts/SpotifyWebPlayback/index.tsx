@@ -71,15 +71,17 @@ function useCreateSpotifyWebPlayback() {
     },
     [isLoading, playback, invalidCurrentPlaybackState],
   );
-
-  const startPlayTrackOnUserPlayback = useCallback(
-    async (trackUri: string) => {
-      await triggerCommandOnPlayback(Command.StartPlayback, {
-        uris: [trackUri],
-      });
+  const playOnUserPlayback = useCallback(
+    async (
+      options:
+        | { uris: string[] }
+        | { context_uri: string; offset: { position: number } },
+    ) => {
+      await triggerCommandOnPlayback(Command.StartPlayback, options);
     },
     [triggerCommandOnPlayback],
   );
+
   const pauseUserPlayback = useCallback(async () => {
     await triggerCommandOnPlayback(Command.PausePlayback);
   }, [triggerCommandOnPlayback]);
@@ -179,9 +181,10 @@ function useCreateSpotifyWebPlayback() {
       changeRepeatMode,
       pauseUserPlayback,
       playNextTrack,
+      playOnUserPlayback,
       playPreviousTrack,
       playTrackOnUserPlayback: (track: TrackSimplified) =>
-        startPlayTrackOnUserPlayback(track.uri),
+        playOnUserPlayback({ uris: [track.uri] }),
       seekTrack,
       setVolume,
       togglePlayMode,

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import events from '@testing-library/user-event';
+import casual from 'casual';
 
 import { TestApp } from '../../../../../App';
 import { PresentSuggestPlayList } from '../PresentSuggestPlayList';
@@ -91,49 +92,20 @@ describe('Test render PresentSuggestPlayList component', () => {
     events.click(screen.getAllByRole('link')[0]);
     expect(onClickSuggestion).toHaveBeenCalledWith(suggestion);
   });
-
-  it.skip('Should show the play button when mouse over the suggestion', async () => {
+  it('Should not show the play button by default', async () => {
     const onClickSuggestion = jest.fn();
-    const suggestion = {
+    const suggestion = casual.PlaylistObject({
       description: 'FooBar',
       id: 'FooBarID',
       images: [{ url: 'https://www.google.com' }],
       name: 'FooBar',
-    };
+    });
     render(
       <TestApp>
         <PresentSuggestPlayList
           data-testid=""
           onClickSuggestion={onClickSuggestion}
           onClickToggleButton={jest.fn()}
-          // @ts-expect-error
-          suggestions={[suggestion]}
-          title="Hello World"
-        />
-      </TestApp>,
-    );
-    events.hover(screen.getByRole('link', { name: suggestion.name }));
-    await expect(
-      screen.findByRole('button', {
-        name: 'play',
-      }),
-    ).resolves.toBeVisible();
-  });
-
-  it('Should not show the play button by default', async () => {
-    const onClickSuggestion = jest.fn();
-    const suggestion = {
-      description: 'FooBar',
-      id: 'FooBarID',
-      images: [{ url: 'https://www.google.com' }],
-      name: 'FooBar',
-    };
-    render(
-      <TestApp>
-        <PresentSuggestPlayList
-          data-testid=""
-          onClickSuggestion={onClickSuggestion}
-          // @ts-expect-error
           suggestions={[suggestion]}
           title="Hello World"
         />

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import events from '@testing-library/user-event';
+import casual from 'casual';
 
 import { TestApp } from '../../../../../App';
 import { PresentSuggestAlbum } from '../PresentSuggestAlbum';
@@ -41,20 +42,16 @@ describe('Test render PresentSuggestAlbum component', () => {
           onClickSuggestion={jest.fn()}
           onClickToggleButton={jest.fn()}
           suggestions={[
-            {
+            casual.AlbumObject({
               artists: [
-                // @ts-expect-error
                 { name: 'Paul' },
-                // @ts-expect-error
                 { name: 'David' },
-                // @ts-expect-error
                 { name: 'Lady Gaga' },
               ],
               id: 'FooBarID',
-              // @ts-expect-error
               images: [{ url: 'https://www.google.com' }],
               name: 'FooBar',
-            },
+            }),
           ]}
           title="Hello World"
         />
@@ -75,18 +72,18 @@ describe('Test render PresentSuggestAlbum component', () => {
   });
   it('Should trigger onClickSuggestion when Suggestion clicked', () => {
     const onClickSuggestion = jest.fn();
-    const suggestion = {
+    const suggestion = casual.AlbumObject({
       artists: [],
       id: 'FooBarID',
       images: [{ url: 'https://www.google.com' }],
       name: 'FooBar',
-    };
+    });
     render(
       <TestApp>
         <PresentSuggestAlbum
           data-testid=""
           onClickSuggestion={onClickSuggestion}
-          // @ts-expect-error
+          onClickToggleButton={jest.fn()}
           suggestions={[suggestion]}
           title="Hello World"
         />
