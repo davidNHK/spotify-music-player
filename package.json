@@ -86,7 +86,7 @@
     "@types/react-router-dom": "5.1.8",
     "@types/retry": "0.12.1",
     "@types/setup-polly-jest": "0.5.1",
-    "@types/spotify-web-playback-sdk": "0.1.8",
+    "@types/spotify-web-playback-sdk": "0.1.10",
     "@types/styled-components": "5.1.11",
     "@types/stylelint": "13.13.1",
     "@types/testing-library__jest-dom": "5.14.0",
