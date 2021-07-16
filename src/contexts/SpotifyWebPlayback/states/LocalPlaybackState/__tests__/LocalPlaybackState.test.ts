@@ -127,6 +127,7 @@ describe('Test LocalPlaybackState', () => {
     const state = await playback.getPlaybackState();
     expect(state).toStrictEqual({
       actions: { disallows: currentState.disallows },
+      context: currentState.context,
       device: {
         id: player._options.id,
         is_active: true,

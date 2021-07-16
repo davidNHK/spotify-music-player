@@ -1,10 +1,16 @@
 import styled from 'styled-components';
 
+import {
+  Props as TogglePlayerPlayingStateButtonProps,
+  TogglePlayerPlayingStateButton,
+} from '../../../../components/TogglePlayerPlayingStateButton/index';
+import { usePlayingTrack } from '../../../../contexts/SpotifyWebPlayback/hooks/usePlayingTrack';
 import type { AlbumSimplified } from '../../../../hooks/spotify/typings/Album';
 
 export interface Props {
   'data-testid': string;
   onClickSuggestion: (suggestion: AlbumSimplified) => void;
+  onClickToggleButton: (suggestion: AlbumSimplified) => void;
   suggestions?: AlbumSimplified[];
   title: string;
 }
@@ -31,13 +37,47 @@ const Suggestion = styled.a`
   min-width: 164px;
   padding: ${props => props.theme.spaces.xl} ${props => props.theme.spaces.xl}
     ${props => props.theme.spaces.m};
-  background: ${props => props.theme.colors.contrast2};
+  background: ${props => props.theme.colors.contrast1};
   border-radius: 8px;
   text-decoration: none;
   margin-right: ${props => props.theme.spaces.m};
   :hover {
     cursor: pointer;
+    background: ${props => props.theme.colors.contrast2};
   }
+`;
+
+const ToggleButton = styled(TogglePlayerPlayingStateButton)<
+  TogglePlayerPlayingStateButtonProps<AlbumSimplified>
+>`
+  outline: none;
+  border: 0;
+  border-radius: 500px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 10;
+  bottom: 8px;
+  right: 8px;
+  visibility: hidden;
+  background-color: ${props => props.theme.colors.green};
+  color: #fff;
+  ${Suggestion}:hover & {
+    visibility: visible;
+  }
+  :hover {
+    transform: scale(1.06);
+  }
+  ${props => {
+    if (props.isBelongCurrentTrack)
+      return `
+    visibility: visible;
+`;
+    return '';
+  }}
 `;
 
 const SuggestionCover = styled.img`
@@ -79,8 +119,11 @@ export function PresentSuggestAlbum({
   title,
   suggestions,
   onClickSuggestion,
+  onClickToggleButton,
   'data-testid': dataTestId,
 }: Props) {
+  const currentTrack = usePlayingTrack();
+
   if (!suggestions || suggestions?.length === 0) return null;
   return (
     <Container data-testid={dataTestId}>
@@ -96,7 +139,18 @@ export function PresentSuggestAlbum({
               onClickSuggestion(suggestion);
             }}
           >
-            <SuggestionCover src={suggestion.images[0]?.url} />
+            <div
+              style={{
+                position: 'relative',
+              }}
+            >
+              <SuggestionCover src={suggestion.images[0]?.url} />
+              <ToggleButton
+                isBelongCurrentTrack={currentTrack?.uri === suggestion.uri}
+                item={suggestion}
+                onClickToggleButton={onClickToggleButton}
+              />
+            </div>
             <SuggestionHeading>
               <SuggestionName>{suggestion.name}</SuggestionName>
               <SuggestionDescription>

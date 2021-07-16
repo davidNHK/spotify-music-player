@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import type { Request, Response } from '@pollyjs/core';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -39,6 +41,7 @@ function DummyComponents({
       seekTrack,
       setVolume,
       transferPlayback,
+      playOnUserPlayback,
     },
     data: { currentPlaybackState },
     error,
@@ -48,6 +51,9 @@ function DummyComponents({
   return (
     <>
       <h1>Track name: {currentPlaybackState?.track.name}</h1>
+      <button onClick={() => playOnUserPlayback({ uris: ['mock-track-uri'] })}>
+        playOnUserPlayback
+      </button>
       <button onClick={pauseUserPlayback}>pauseUserPlayback</button>
       <button onClick={() => playTrackOnUserPlayback(track)}>
         playTrackOnUserPlayback
@@ -315,6 +321,42 @@ describe('Test SpotifyWebPlayback', () => {
     expect(req.query).toEqual({
       device_id: 'mock-remote-player-device-id',
     });
+  });
+
+  it('.playOnUserPlayback should call API', async () => {
+    const apiHandler = jest.fn().mockImplementation((_, res: Response) => {
+      res.status(204);
+    });
+    createAPIMock({
+      put: {
+        '/v1/me/player/play': apiHandler,
+      },
+    });
+    render(
+      <TestApp>
+        <DummyComponents
+          track={
+            {
+              uri: 'track-uri',
+            } as any
+          }
+        />
+      </TestApp>,
+    );
+
+    userEvent.click(
+      await screen.findByRole('button', { name: 'playOnUserPlayback' }),
+    );
+    await waitFor(() => expect(apiHandler).toHaveBeenCalled());
+    const [req]: [req: Request] = apiHandler.mock.calls[0];
+    expect(req.query).toEqual({
+      device_id: 'mock-remote-player-device-id',
+    });
+    expect(req.body).toEqual(
+      JSON.stringify({
+        uris: ['mock-track-uri'],
+      }),
+    );
   });
 
   it('.playTrackOnUserPlayback should call API', async () => {

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import events from '@testing-library/user-event';
+import casual from 'casual';
 
 import { TestApp } from '../../../../../App';
 import { PresentSuggestPlayList } from '../PresentSuggestPlayList';
@@ -11,6 +12,7 @@ describe('Test render PresentSuggestPlayList component', () => {
         <PresentSuggestPlayList
           data-testid=""
           onClickSuggestion={jest.fn()}
+          onClickToggleButton={jest.fn()}
           suggestions={undefined}
           title="Hello World"
         />
@@ -18,12 +20,14 @@ describe('Test render PresentSuggestPlayList component', () => {
     );
     expect(() => screen.getAllByText(/.+/)).toThrow();
   });
+
   it('Should render nothing if given suggestion is empty', () => {
     render(
       <TestApp>
         <PresentSuggestPlayList
           data-testid=""
           onClickSuggestion={jest.fn()}
+          onClickToggleButton={jest.fn()}
           suggestions={[]}
           title="Hello World"
         />
@@ -38,6 +42,7 @@ describe('Test render PresentSuggestPlayList component', () => {
         <PresentSuggestPlayList
           data-testid=""
           onClickSuggestion={jest.fn()}
+          onClickToggleButton={jest.fn()}
           suggestions={[
             {
               description: 'FooBarDescription',
@@ -77,6 +82,7 @@ describe('Test render PresentSuggestPlayList component', () => {
         <PresentSuggestPlayList
           data-testid=""
           onClickSuggestion={onClickSuggestion}
+          onClickToggleButton={jest.fn()}
           // @ts-expect-error
           suggestions={[suggestion]}
           title="Hello World"
@@ -85,5 +91,30 @@ describe('Test render PresentSuggestPlayList component', () => {
     );
     events.click(screen.getAllByRole('link')[0]);
     expect(onClickSuggestion).toHaveBeenCalledWith(suggestion);
+  });
+  it('Should not show the play button by default', async () => {
+    const onClickSuggestion = jest.fn();
+    const suggestion = casual.PlaylistObject({
+      description: 'FooBar',
+      id: 'FooBarID',
+      images: [{ url: 'https://www.google.com' }],
+      name: 'FooBar',
+    });
+    render(
+      <TestApp>
+        <PresentSuggestPlayList
+          data-testid=""
+          onClickSuggestion={onClickSuggestion}
+          onClickToggleButton={jest.fn()}
+          suggestions={[suggestion]}
+          title="Hello World"
+        />
+      </TestApp>,
+    );
+    expect(
+      screen.queryByRole('button', {
+        name: 'play',
+      }),
+    ).toBeNull();
   });
 });

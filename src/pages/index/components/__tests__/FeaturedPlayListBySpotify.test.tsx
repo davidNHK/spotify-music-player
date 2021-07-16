@@ -4,28 +4,13 @@ import casual from 'casual';
 import { createMemoryHistory } from 'history';
 
 import { createPollyContext } from '../../../../../testHelper/polly/createPollyContext';
+import { setupMockServer } from '../../../../../testHelper/polly/setupMockServer';
 import { TestApp } from '../../../../App';
 import { withFeaturedPlayListBySpotify } from '../FeaturedPlayListBySpotify';
 import type { Props } from '../Present/PresentSuggestPlayList';
 
 const mockPlaylist = casual.SimplifiedPlaylistObject({});
-createPollyContext({
-  appConfig: {
-    enableMockServer: true,
-    mockRouteHandlers: {
-      spotifyAPI: {
-        get: {
-          '/v1/browse/featured-playlists': (_, res) => {
-            res.status(200).json({
-              message: 'Testing title',
-              playlists: casual.PagingObject([mockPlaylist]),
-            });
-          },
-        },
-      },
-    },
-  },
-});
+const context = createPollyContext();
 
 const FeaturedPlayListBySpotify = withFeaturedPlayListBySpotify(
   ({ title, suggestions, onClickSuggestion }: Props) => {
@@ -50,7 +35,20 @@ const FeaturedPlayListBySpotify = withFeaturedPlayListBySpotify(
 describe('Test FeaturedPlayListBySpotify', () => {
   it('Click suggestion should jump to /playlist/:id', async () => {
     const history = createMemoryHistory();
-
+    setupMockServer(context.polly, {
+      handlers: {
+        spotifyAPI: {
+          get: {
+            '/v1/browse/featured-playlists': (_, res) => {
+              res.status(200).json({
+                message: 'Testing title',
+                playlists: casual.PagingObject([mockPlaylist]),
+              });
+            },
+          },
+        },
+      },
+    });
     render(
       <TestApp RouterProps={{ history }}>
         <FeaturedPlayListBySpotify />

@@ -141,10 +141,12 @@ export class RemotePlaybackState implements ActivePlaybackState {
       is_playing,
       item: track,
       actions,
+      context,
     } = data;
 
     return {
       actions,
+      context,
       device,
       is_active: device.is_active,
       is_paused: !is_playing,

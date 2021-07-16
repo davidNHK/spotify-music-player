@@ -30,9 +30,6 @@ describe('Test /', () => {
       </TestApp>,
     );
     await expect(
-      screen.findByTestId('suggested-album-by-top-stream-tracks'),
-    ).resolves.toBeVisible();
-    await expect(
       screen.findByTestId('featured-play-list'),
     ).resolves.toBeVisible();
     await expect(

@@ -39,6 +39,7 @@ export interface ActivePlaybackState {
     actions: {
       disallows: Spotify.PlaybackDisallows;
     };
+    context: Spotify.PlaybackContext;
     device: PlaybackDevice;
     is_active: boolean;
     is_paused: boolean;
