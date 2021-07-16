@@ -5292,10 +5292,10 @@
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
 
-"@types/spotify-web-playback-sdk@0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@types/spotify-web-playback-sdk/-/spotify-web-playback-sdk-0.1.8.tgz#59a06ddae72401918c04368409dbb0c73d1bcfe2"
-  integrity sha512-WvclWvBwzf7PD16DG8NIVRHhDvb40tkY0XxVdF+BVYXgJ7qD5mkHAibq0Q+jaqQozwfrUB7XlSdjk0A4PrbA5w==
+"@types/spotify-web-playback-sdk@0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@types/spotify-web-playback-sdk/-/spotify-web-playback-sdk-0.1.10.tgz#f1154bf4a77c2edb7d4665c66fdb9332a1f61268"
+  integrity sha512-lNJ7sxXVQaKPV/Eq7XyrRW/pU/kZqbocHYoqWBIkGhlHkx432vmULBoeyQc4PSimXnz8iBijqrBPL3Mur+6feg==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.0"
